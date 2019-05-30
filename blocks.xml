@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EditorDefinitions>
+  <PolyGroups ModuleName="ColorSensorRGB" ModuleVersion="1.4 (Enhanced By OFDL Dev.)">
+	<PolyGroup Name="ColorSensorRGB" BlockFamily="Sensor">
+      <Parameter Name="Port" CompilerDirectives="OneInputPort" Direction="Input" DefaultValue="1.3" />
+      <Parameter Name="Red" Identification="Identification_Red.png" DataType="Single" Direction="Output" />
+      <Parameter Name="Green" Identification="Identification_Green.png" DataType="Single" Direction="Output" />
+      <Parameter Name="Blue" Identification="Identification_Blue.png" DataType="Single" Direction="Output" />
+	  <Parameter Name="RawValue" Identification="Identification_Fill.png" DataType="Single" Direction="Output" />
+	  
+	  <Parameter Name="Red_Range" Identification="Identification_Red.png" DataType="Single" Direction="Input" DefaultValue="170"/>
+	  <Parameter Name="Green_Range" Identification="Identification_Green.png" DataType="Single" Direction="Input" DefaultValue="160"/>
+	  <Parameter Name="Blue_Range" Identification="Identification_Blue.png" DataType="Single" Direction="Input" DefaultValue="120"/>
+	  <Parameter Name="Error_Amount" Identification="Identification_er.png" DataType="Single" Direction="Input" DefaultValue="20"/>
+	  <Parameter Name="Result" Identification="Identification_Select.png" DataType="Boolean" Direction="Output"/>
+      <Hardware>
+        <NXTPlotColor>#ffff3132</NXTPlotColor>
+        <EV3PlotColor>#ff785028</EV3PlotColor>
+        <EV3AutoID>29</EV3AutoID>
+        <OtherAutoID>4</OtherAutoID>
+        <OtherAutoID>2</OtherAutoID>
+        <Direction>Input</Direction>
+        <DefaultPort>1.3</DefaultPort>
+      </Hardware>
+      <Block>
+        <Mode>ReadRGB</Mode>
+        <Reference Type="VILib" Name="ColorSensorRGBValue.vix" />
+        <ParameterReference Name="Port" />
+        <ParameterReference Name="Red" />
+        <ParameterReference Name="Green" />
+        <ParameterReference Name="Blue" />
+        <PaletteInfo Weight="0.5" />
+        <BlockInterface>RGB</BlockInterface>
+        <Flags>PBROnly</Flags>
+        <Hardware>NxtColor</Hardware>
+        <HardwareModeInfo Name="RGB-RAW" ID="4" Range="0,255" Unit="" />
+      </Block>
+	  <Block>
+        <Mode>DectRGB</Mode>
+        <Reference Type="VILib" Name="ColorSensorRGBDect.vix" />
+        <ParameterReference Name="Port" />
+		<ParameterReference Name="Red" />
+        <ParameterReference Name="Green" />
+        <ParameterReference Name="Blue" />
+		<ParameterReference Name="Error_Amount" />
+        <ParameterReference Name="Red_Range" />
+        <ParameterReference Name="Green_Range" />
+        <ParameterReference Name="Blue_Range" />
+        <ParameterReference Name="Result" />
+        
+        <BlockInterface>RGB</BlockInterface>
+        <Flags>PBROnly</Flags>
+        <Hardware>NxtColor</Hardware>
+        <HardwareModeInfo Name="RGB-RAW" ID="4" Range="0,255" Unit="" />
+      </Block>
+	  <Block>
+        <Mode>ReadRaw</Mode>
+        <Reference Type="VILib" Name="ColorSensorRawValue.vix" />
+        <ParameterReference Name="Port" />
+        <ParameterReference Name="RawValue" />
+        <Flags></Flags>
+        <Hardware>NxtColor</Hardware>
+      </Block>
+    </PolyGroup>
+  </PolyGroups>
+</EditorDefinitions>

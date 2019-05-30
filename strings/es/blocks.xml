@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EditorStrings>
+  <PolyGroups ModuleName="ColorSensorRGB">
+	<PolyGroup Name="ColorSensorRGB" DisplayName="Color Sensor RGB Enhanced" DisplayNamePrefix="ColorSensorRGB">
+      <Parameter Name="Port" DisplayName="Port" >
+        <Description><![CDATA[<p>Context help for Port</p>]]></Description>
+      </Parameter>
+      <Parameter Name="Red" DisplayName="Red">
+        <Description><![CDATA[<p>Red component of RGB color</p>]]></Description>
+      </Parameter>
+      <Parameter Name="Green" DisplayName="Green">
+        <Description><![CDATA[<p>Green component of RGB color</p>]]></Description>
+      </Parameter>
+      <Parameter Name="Blue" DisplayName="Blue">
+        <Description><![CDATA[<p>Blue component of RGB color</p>]]></Description>
+      </Parameter>
+	  <Parameter Name="Red_Range" DisplayName="Red Reference Value">
+        <Description><![CDATA[<p>Red component of RGB color</p>]]></Description>
+      </Parameter>
+      <Parameter Name="Green_Range" DisplayName="Green Reference Value">
+        <Description><![CDATA[<p>Green component of RGB color</p>]]></Description>
+      </Parameter>
+      <Parameter Name="Blue_Range" DisplayName="Blue Reference Value">
+        <Description><![CDATA[<p>Blue component of RGB color</p>]]></Description>
+      </Parameter>
+	  <Parameter Name="Error_Amount" DisplayName="Error Amount">
+        <Description><![CDATA[<p>Blue component of RGB color</p>]]></Description>
+      </Parameter>
+	  <Parameter Name="Result" DisplayName="Result">
+        <Description><![CDATA[<p>Blue component of RGB color</p>]]></Description>
+      </Parameter>
+	  <Parameter Name="RawValue" DisplayName="Raw Value">
+        <Description><![CDATA[<p>Blue component of RGB color</p>]]></Description>
+      </Parameter>
+      <Block Mode="ReadRGB" DisplayName="Measure - RGB color">
+        <Description><![CDATA[<p>Measure RGB colors</p>]]></Description>
+      </Block>
+	  <Block Mode="ReadRaw" DisplayName="Reflected Light Intensity (Raw)(T2H)">
+        <Description><![CDATA[<p>Measure RGB colors</p>]]></Description>
+      </Block>
+	  <Block Mode="DectRGB" DisplayName="Compare - RGB color">
+        <Description><![CDATA[<p>Measure RGB colors</p>]]></Description>
+      </Block>
+    </PolyGroup>
+  </PolyGroups>
+</EditorStrings>
