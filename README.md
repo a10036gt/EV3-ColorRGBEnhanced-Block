@@ -6,6 +6,6 @@ The original EV3 color sensor supports reflected light, ambient light and color 
 
 This Block is baseed on [mindcuber's RGB Block](https://mindcuber.com/mindcub3r/mindcub3r.html#ColorSensorRGBBlock) remade, and add T2H and some functions write by us.
 
-使用說明：https://www.ofdl.nctu.me/en/ev3-hacking/ev3-color-sensor-adv-block/
+使用說明：https://www.ofdl.nctu.me/ev3-hack/ev3-color-sensor-enhanced-block/
 
 User Gudie：https://www.ofdl.nctu.me/en/ev3-hacking/ev3-color-sensor-adv-block/
