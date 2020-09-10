@@ -1,0 +1,510 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SourceFile Version="1.0.2.10" xmlns="http://www.ni.com/SourceModel.xsd">
+    <Namespace Name="Project">
+        <VirtualInstrument IsTopLevel="false" IsReentrant="false" Version="1.0.2.0" xmlns="http://www.ni.com/VirtualInstrument.xsd">
+            <DataItem Name="R" DataType="Single" DefaultTerminalDirection="Output" CallUsage="None" CallDirection="Input" CallIndex="0" />
+            <DataItem Name="G" DataType="Single" DefaultTerminalDirection="Output" CallUsage="None" CallDirection="Input" CallIndex="1" />
+            <DataItem Name="B" DataType="Single" DefaultTerminalDirection="Output" CallUsage="None" CallDirection="Input" CallIndex="2" />
+            <DataItem Name="H" DataType="Single" DefaultTerminalDirection="Input" CallUsage="None" CallDirection="Output" CallIndex="0" DefaultValue="0" />
+            <DataItem Name="S" DataType="Single" DefaultTerminalDirection="Input" CallUsage="None" CallDirection="Output" CallIndex="1" DefaultValue="0" />
+            <DataItem Name="V" DataType="Single" DefaultTerminalDirection="Input" CallUsage="None" CallDirection="Output" CallIndex="2" DefaultValue="0" />
+            <DataItem Name="Num2divid" DataType="Single" DefaultTerminalDirection="Input" CallUsage="None" CallDirection="Input" CallIndex="3" DefaultValue="0" />
+            <DataItem Name="L" DataType="Single" DefaultTerminalDirection="Input" CallUsage="None" CallDirection="Output" CallIndex="3" DefaultValue="0" />
+            <DataItem Name="SequenceIn" DataType="NationalInstruments:SourceModel:DataTypes:X3SequenceWireDataType" DefaultTerminalDirection="Output" CallUsage="None" CallDirection="Input" CallIndex="4" />
+            <DataItem Name="SequenceOut" DataType="NationalInstruments:SourceModel:DataTypes:X3SequenceWireDataType" DefaultTerminalDirection="Input" CallUsage="None" CallDirection="Output" CallIndex="4" />
+            <FrontPanel>
+                <fpruntime:FrontPanelCanvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fpruntime="clr-namespace:NationalInstruments.LabVIEW.FrontPanelRuntime;assembly=NationalInstruments.LabVIEW.FrontPanelRuntime" xmlns:Model0="clr-namespace:NationalInstruments.SourceModel.Designer;assembly=NationalInstruments.SourceModel" x:Name="FrontPanel" Model0:DesignerSurfaceProperties.CanSnapToObjects="True" Model0:DesignerSurfaceProperties.SnapToObjects="True" Model0:DesignerSurfaceProperties.ShowSnaplines="True" Model0:DesignerSurfaceProperties.ShowControlAdorners="True" Width="640" Height="480" />
+            </FrontPanel>
+            <BlockDiagram Name="__RootDiagram__">
+                <Comment Bounds="84 -168 273 112" SizeMode="User" AttachStyle="Free">
+                    <Content>IF R&gt;G &amp;&amp; G&gt;B, R is MAX, B is MIN
+IF R&gt;G  &amp;&amp; G&lt;B &amp;&amp; R&gt;B, R is MAX, G is MIN
+IF R&gt;G &amp;&amp; G&lt;B &amp;&amp; R&lt;B, B is MAX, G is MIN
+
+IF G&gt;R &amp;&amp; R&gt;B , G is MAX, B is MIN
+IF G&gt;R &amp;&amp; R&lt;B &amp;&amp; G&gt;B,G is MAX, R is MIN
+IF G&gt;R &amp;&amp; R&lt;B &amp;&amp; G&lt;B, B is MAX, R is MIN</Content>
+                </Comment>
+                <Comment Bounds="364 -182 567 80" SizeMode="User" AttachStyle="Free">
+                    <Content>Calc the Max and min</Content>
+                </Comment>
+                <Comment Bounds="-266 14 329 280" SizeMode="User" AttachStyle="Free">
+                    <Content>  //RGB to HSV Calc
+  float r, g, b;
+  float cmax = max3(r, g, b); // maximum of r, g, b
+  float cmin = min3(r, g, b); // minimum of r, g, b
+  float diff = cmax - cmin; // diff of cmax and cmin.
+  if (cmax == cmin)
+    HSV[0] = 0;
+  else if (cmax == r)
+    HSV[0] = fmod((60 * ((g - b) / diff) + 360), 360.0);
+  else if (cmax == g)
+    HSV[0] = fmod((60 * ((b - r) / diff) + 120), 360.0);
+  else if (cmax == b)
+    HSV[0] = fmod((60 * ((r - g) / diff) + 240), 360.0);
+  // if cmax equal zero
+  if (cmax == 0)
+    HSV[1] = 0;
+  else
+    HSV[1] = (diff / cmax) * 100;
+  // compute v
+  HSV[2] = cmax * 100;</Content>
+                </Comment>
+                <FlatSequence Id="n21" Bounds="378 -56 2513 560">
+                    <FlatSequence.Frame Id="D22" Bounds="7 7 882 546">
+                        <Wire Id="w9" Joints="N(n1:Numeric) h(49) N(b11:n0) B(1) v(140) N(n8:x)" />
+                        <Wire Id="w10" Joints="N(n2:Numeric) h(28) v(140) N(n8:y) B(1) N(b12:n0)" />
+                        <Wire Id="w19" Joints="N(n3:Numeric) N(b14:n0)" />
+                        <Wire Id="w20" Joints="N(n8:x\ \&gt;\=\ y\?) N(b7:n0)" />
+                        <DataAccessor DataItem="R" Id="n1" Bounds="49 182 70 14">
+                            <Terminal Id="Numeric" Direction="Output" Wire="w9" Hotspot="1 0.5" Bounds="0 0 70 14" />
+                        </DataAccessor>
+                        <DataAccessor DataItem="G" Id="n2" Bounds="49 196 70 14">
+                            <Terminal Id="Numeric" Direction="Output" Wire="w10" Hotspot="1 0.5" Bounds="0 0 70 14" />
+                        </DataAccessor>
+                        <DataAccessor DataItem="B" Id="n3" Bounds="49 210 70 14">
+                            <Terminal Id="Numeric" Direction="Output" Wire="w19" Hotspot="1 0.5" Bounds="0 0 70 14" />
+                        </DataAccessor>
+                        <IsGreaterOrEqual Id="n8" Terminals="x\ \&gt;\=\ y\?=w20, y=w10, x=w9" TopLeft="196 322" />
+                        <CaseStructure Id="n0" Bounds="238 77 574 385" DataType="Boolean" UserSelectorBounds="242.267 0 89.467 14" Selected="d1" Default="d0">
+                            <CaseStructure.Case Id="d0" Bounds="7 7 560 371" Pattern="False">
+                                <CaseStructure Id="n8" Bounds="133 35 385 329" DataType="Boolean" UserSelectorBounds="147.767 0 89.467 14" Selected="D18" Default="D18">
+                                    <CaseStructure.Case Id="D18" Bounds="7 7 371 315" Pattern="False">
+                                        <IsGreaterOrEqual Id="n40" Terminals="x\ \&gt;\=\ y\?=w18, y=w35, x=w20" TopLeft="56 182" />
+                                        <CaseStructure Id="n14" Bounds="98 98 196 210" DataType="Boolean" UserSelectorBounds="53.267 0 89.467 14" Selected="D42" Default="D42">
+                                            <CaseStructure.Case Id="D42" Bounds="7 7 182 196" Pattern="False">
+                                                <Literal Id="n40" Terminals="Out=w15" Bounds="105 98 35 14" Interpretation="Exact" DataType="Single">240</Literal>
+                                                <Wire Id="w15" Joints="N(n40:Out) h(7) v(-14) N(b29:D42)" />
+                                                <Wire Id="w12" Joints="N(b20:D42) h(63) v(56) N(b27:D42) B(1) h(98) v(14) N(b23:D42)" />
+                                                <Wire Id="w13" Joints="N(b21:D42) h(35) v(14) N(b24:D42)" />
+                                                <Wire Id="w14" Joints="N(b22:D42) h(21) v(14) N(b26:D42)" />
+                                            </CaseStructure.Case>
+                                            <CaseStructure.Case Id="D43" Bounds="7 7 182 196" Pattern="True">
+                                                <Literal Id="n40" Terminals="Out=w14" Bounds="91 84 35 14" Interpretation="Exact" DataType="Single">120</Literal>
+                                                <Wire Id="w14" Joints="N(n40:Out) N(b29:D43)" />
+                                                <Wire Id="w13" Joints="N(b20:D43) h(99.6) h(61.4) v(28) N(b24:D43) B(1) v(56) N(b27:D43)" />
+                                                <Wire Id="w15" Joints="N(b21:D43) h(49) v(28) N(b26:D43)" />
+                                                <Wire Id="w16" Joints="N(b22:D43) h(126) v(-14) N(b23:D43)" />
+                                            </CaseStructure.Case>
+                                            <CaseStructure.Selector Id="b14" Terminals="n14=w18, D42, D43" TopLeft="0 91" />
+                                            <CaseStructure.Tunnel Id="b20" Terminals="n14=w33, D42=w12, D43=w13" TopLeft="0 21" />
+                                            <CaseStructure.Tunnel Id="b21" Terminals="n14=w20, D42=w13, D43=w15" TopLeft="0 35" />
+                                            <CaseStructure.Tunnel Id="b22" Terminals="n14=w35, D42=w14, D43=w16" TopLeft="0 49" />
+                                            <CaseStructure.Tunnel Id="b29" Terminals="n14=w32, D42=w15, D43=w14" TopLeft="182 91" />
+                                            <CaseStructure.Tunnel Id="b23" Terminals="n14=w28, D42=w12, D43=w16" TopLeft="182 35" />
+                                            <CaseStructure.Tunnel Id="b24" Terminals="n14=w29, D42=w13, D43=w13" TopLeft="182 49" />
+                                            <CaseStructure.Tunnel Id="b26" Terminals="n14=w30, D42=w14, D43=w15" TopLeft="182 63" />
+                                            <CaseStructure.Tunnel Id="b27" Terminals="n14=w31, D42=w12, D43=w13" TopLeft="182 77" />
+                                        </CaseStructure>
+                                        <Wire Id="w18" Joints="N(n40:x\ \&gt;\=\ y\?) N(b14:n14)" />
+                                        <Wire Id="w20" Joints="N(b13:D18) h(17) v(49) N(n40:x) B(1) N(b21:n14)" />
+                                        <Wire Id="w28" Joints="N(b23:n14) N(b25:D18)" />
+                                        <Wire Id="w29" Joints="N(b24:n14) N(b28:D18)" />
+                                        <Wire Id="w30" Joints="N(b26:n14) N(b17:D18)" />
+                                        <Wire Id="w31" Joints="N(b27:n14) N(b18:D18)" />
+                                        <Wire Id="w32" Joints="N(b29:n14) N(b19:D18)" />
+                                        <Wire Id="w33" Joints="N(b16:D18) N(b20:n14)" />
+                                        <Wire Id="w35" Joints="N(b15:D18) h(29) v(49) N(n40:y) B(1) N(b22:n14)" />
+                                        <Comment Bounds="35 42 100 35" SizeMode="User" AttachStyle="Free">
+                                            <Content>IF G &gt; B</Content>
+                                        </Comment>
+                                    </CaseStructure.Case>
+                                    <CaseStructure.Case Id="D19" Bounds="7 7 371 315" Pattern="True">
+                                        <Literal Id="n16" Terminals="Out=w11" Bounds="259 203 35 14" Interpretation="Exact" DataType="Single">120</Literal>
+                                        <Wire Id="w11" Joints="N(n16:Out) h(7) v(-14) N(b19:D19)" />
+                                        <Wire Id="w13" Joints="N(b16:D19) h(350) v(28) N(b28:D19)" />
+                                        <Wire Id="w14" Joints="N(b15:D19) h(287) v(-14) N(b25:D19) B(1) v(28) N(b18:D19)" />
+                                        <Wire Id="w15" Joints="N(b13:D19) h(21) v(28) N(b17:D19)" />
+                                    </CaseStructure.Case>
+                                    <CaseStructure.Selector Id="b8" Terminals="n8=w31, D18, D19" TopLeft="0 210" />
+                                    <CaseStructure.Tunnel Id="b13" Terminals="n8=w32, D18=w20, D19=w15" TopLeft="0 140" />
+                                    <CaseStructure.Tunnel Id="b15" Terminals="n8=w24, D18=w35, D19=w14" TopLeft="0 154" />
+                                    <CaseStructure.Tunnel Id="b16" Terminals="n8=w33, D18=w33, D19=w13" TopLeft="0 126" />
+                                    <CaseStructure.Tunnel Id="b17" Terminals="n8=w27, D18=w30, D19=w15" TopLeft="371 168" />
+                                    <CaseStructure.Tunnel Id="b18" Terminals="n8=w28, D18=w31, D19=w14" TopLeft="371 182" />
+                                    <CaseStructure.Tunnel Id="b19" Terminals="n8=w29, D18=w32, D19=w11" TopLeft="371 196" />
+                                    <CaseStructure.Tunnel Id="b25" Terminals="n8=w25, D18=w28, D19=w14" TopLeft="371 140" />
+                                    <CaseStructure.Tunnel Id="b28" Terminals="n8=w26, D18=w29, D19=w13" TopLeft="371 154" />
+                                </CaseStructure>
+                                <Wire Id="w24" Joints="N(b14:d0) h(47) v(126) N(n40:y) B(1) h(30) v(63) N(b15:n8)" />
+                                <Wire Id="w25" Joints="N(b25:n8) N(b27:d0)" />
+                                <Wire Id="w26" Joints="N(b28:n8) N(b36:d0)" />
+                                <Wire Id="w27" Joints="N(b17:n8) N(b20:d0)" />
+                                <Wire Id="w28" Joints="N(b18:n8) N(b22:d0)" />
+                                <Wire Id="w29" Joints="N(b19:n8) N(b24:d0)" />
+                                <IsGreaterOrEqual Id="n40" Terminals="x\ \&gt;\=\ y\?=w31, y=w24, x=w33" TopLeft="98 238" />
+                                <Wire Id="w31" Joints="N(n40:x\ \&gt;\=\ y\?) N(b8:n8)" />
+                                <Wire Id="w32" Joints="N(b12:d0) h(91) v(63) N(b13:n8)" />
+                                <Wire Id="w33" Joints="N(b11:d0) h(30) v(140) N(n40:x) B(1) h(89) v(63) N(b16:n8)" />
+                                <Comment Bounds="14 35 100 35" SizeMode="User" AttachStyle="Free">
+                                    <Content>IF R &gt; B</Content>
+                                </Comment>
+                            </CaseStructure.Case>
+                            <CaseStructure.Case Id="d1" Bounds="7 7 560 371" Pattern="True">
+                                <CaseStructure Id="n8" Bounds="154 42 385 315" DataType="Boolean" UserSelectorBounds="147.767 0 89.467 14" Selected="D19" Default="D18">
+                                    <CaseStructure.Case Id="D18" Bounds="7 7 371 301" Pattern="False">
+                                        <IsGreaterOrEqual Id="n40" Terminals="x\ \&gt;\=\ y\?=w18, y=w13, x=w12" TopLeft="56 182" />
+                                        <Wire Id="w12" Joints="N(b16:D18) h(42) v(49) N(b20:n14) B(2) v(56) N(n40:x)" />
+                                        <Wire Id="w13" Joints="N(b15:D18) h(7) v(49) N(b22:n14) B(2) v(42) N(n40:y)" />
+                                        <CaseStructure Id="n14" Bounds="98 105 196 182" DataType="Boolean" UserSelectorBounds="53.267 0 89.467 14" Selected="D43" Default="D42">
+                                            <CaseStructure.Case Id="D42" Bounds="7 7 182 168" Pattern="False">
+                                                <Wire Id="w11" Joints="N(b20:D42) N(b23:D42)" />
+                                                <Wire Id="w12" Joints="N(b21:D42) h(42) v(28) N(b27:D42) B(1) N(b24:D42)" />
+                                                <Wire Id="w13" Joints="N(b22:D42) N(b26:D42)" />
+                                                <Literal Id="n40" Terminals="Out=w15" Bounds="105 84 35 14" Interpretation="Exact" DataType="Single">240</Literal>
+                                                <Wire Id="w15" Joints="N(n40:Out) h(7) v(-14) N(b29:D42)" />
+                                            </CaseStructure.Case>
+                                            <CaseStructure.Case Id="D43" Bounds="7 7 182 168" Pattern="True">
+                                                <Literal Id="n40" Terminals="Out=w14" Bounds="126 84 35 14" Interpretation="Exact" DataType="Single">360</Literal>
+                                                <Wire Id="w14" Joints="N(n40:Out) h(7) v(-14) N(b29:D43)" />
+                                                <Wire Id="w9" Joints="N(b21:D43) h(35) v(-14) N(b23:D43) B(1) v(28) N(b27:D43)" />
+                                                <Wire Id="w11" Joints="N(b22:D43) h(70) v(-14) N(b24:D43)" />
+                                                <Wire Id="w13" Joints="N(b20:D43) h(42) v(28) N(b26:D43)" />
+                                            </CaseStructure.Case>
+                                            <CaseStructure.Selector Id="b14" Terminals="n14=w18, D42, D43" TopLeft="0 84" />
+                                            <CaseStructure.Tunnel Id="b20" Terminals="n14=w12, D42=w11, D43=w13" TopLeft="0 21" />
+                                            <CaseStructure.Tunnel Id="b21" Terminals="n14=w20, D42=w12, D43=w9" TopLeft="0 35" />
+                                            <CaseStructure.Tunnel Id="b22" Terminals="n14=w13, D42=w13, D43=w11" TopLeft="0 49" />
+                                            <CaseStructure.Tunnel Id="b29" Terminals="n14=w32, D42=w15, D43=w14" TopLeft="182 77" />
+                                            <CaseStructure.Tunnel Id="b23" Terminals="n14=w28, D42=w11, D43=w9" TopLeft="182 21" />
+                                            <CaseStructure.Tunnel Id="b24" Terminals="n14=w29, D42=w12, D43=w11" TopLeft="182 35" />
+                                            <CaseStructure.Tunnel Id="b26" Terminals="n14=w30, D42=w13, D43=w13" TopLeft="182 49" />
+                                            <CaseStructure.Tunnel Id="b27" Terminals="n14=w31, D42=w12, D43=w9" TopLeft="182 63" />
+                                        </CaseStructure>
+                                        <Wire Id="w18" Joints="N(n40:x\ \&gt;\=\ y\?) N(b14:n14)" />
+                                        <Wire Id="w20" Joints="N(b13:D18) h(63) v(49) N(b21:n14)" />
+                                        <Wire Id="w28" Joints="N(b23:n14) N(b25:D18)" />
+                                        <Wire Id="w29" Joints="N(b24:n14) N(b28:D18)" />
+                                        <Wire Id="w30" Joints="N(b26:n14) N(b17:D18)" />
+                                        <Wire Id="w31" Joints="N(b27:n14) N(b18:D18)" />
+                                        <Wire Id="w32" Joints="N(b29:n14) N(b19:D18)" />
+                                        <Comment Bounds="140 49 100 35" SizeMode="User" AttachStyle="Free">
+                                            <Content>IF R &gt; B</Content>
+                                        </Comment>
+                                    </CaseStructure.Case>
+                                    <CaseStructure.Case Id="D19" Bounds="7 7 371 301" Pattern="True">
+                                        <Wire Id="w6" Joints="N(b16:D19) h(70) v(77) N(b17:D19)" />
+                                        <Wire Id="w8" Joints="N(b15:D19) h(44) v(35) v(28) N(b18:D19) B(2) N(b28:D19)" />
+                                        <Literal Id="n16" Terminals="Out=w11" Bounds="154 196 28 14" Interpretation="Exact" DataType="Single">0</Literal>
+                                        <Wire Id="w11" Joints="N(n16:Out) h(7) v(-14) N(b19:D19)" />
+                                        <Wire Id="w13" Joints="N(b13:D19) h(350) v(35) N(b25:D19)" />
+                                    </CaseStructure.Case>
+                                    <CaseStructure.Selector Id="b8" Terminals="n8=w31, D18, D19" TopLeft="0 196" />
+                                    <CaseStructure.Tunnel Id="b13" Terminals="n8=w14, D18=w20, D19=w13" TopLeft="0 98" />
+                                    <CaseStructure.Tunnel Id="b15" Terminals="n8=w33, D18=w13, D19=w8" TopLeft="0 112" />
+                                    <CaseStructure.Tunnel Id="b16" Terminals="n8=w17, D18=w12, D19=w6" TopLeft="0 84" />
+                                    <CaseStructure.Tunnel Id="b17" Terminals="n8=w20, D18=w30, D19=w6" TopLeft="371 161" />
+                                    <CaseStructure.Tunnel Id="b18" Terminals="n8=w22, D18=w31, D19=w8" TopLeft="371 175" />
+                                    <CaseStructure.Tunnel Id="b19" Terminals="n8=w24, D18=w32, D19=w11" TopLeft="371 189" />
+                                    <CaseStructure.Tunnel Id="b25" Terminals="n8=w27, D18=w28, D19=w13" TopLeft="371 133" />
+                                    <CaseStructure.Tunnel Id="b28" Terminals="n8=w30, D18=w29, D19=w8" TopLeft="371 147" />
+                                </CaseStructure>
+                                <Wire Id="w14" Joints="N(b12:d1) h(28) v(119) N(n16:x) B(1) h(63) v(28) N(b13:n8)" />
+                                <IsGreaterOrEqual Id="n16" Terminals="x\ \&gt;\=\ y\?=w31, y=w33, x=w14" TopLeft="49 231" />
+                                <Wire Id="w17" Joints="N(b11:d1) h(91) v(28) N(b16:n8)" />
+                                <Wire Id="w20" Joints="N(b17:n8) N(b20:d1)" />
+                                <Wire Id="w22" Joints="N(b18:n8) N(b22:d1)" />
+                                <Wire Id="w24" Joints="N(b19:n8) N(b24:d1)" />
+                                <Wire Id="w27" Joints="N(b25:n8) N(b27:d1)" />
+                                <Wire Id="w30" Joints="N(b28:n8) N(b36:d1)" />
+                                <Wire Id="w33" Joints="N(b14:d1) h(35) v(119) N(n16:y) B(1) h(56) v(28) N(b15:n8)" />
+                                <Wire Id="w31" Joints="N(n16:x\ \&gt;\=\ y\?) N(b8:n8)" />
+                                <Comment Bounds="14 42 100 35" SizeMode="User" AttachStyle="Free">
+                                    <Content>IF G &gt; B</Content>
+                                </Comment>
+                            </CaseStructure.Case>
+                            <CaseStructure.Selector Id="b7" Terminals="n0=w20, d0, d1" TopLeft="0 252" />
+                            <CaseStructure.Tunnel Id="b11" Terminals="n0=w9, d0=w33, d1=w17" TopLeft="0 105" />
+                            <CaseStructure.Tunnel Id="b12" Terminals="n0=w10, d0=w32, d1=w14" TopLeft="0 119" />
+                            <CaseStructure.Tunnel Id="b14" Terminals="n0=w19, d0=w24, d1=w33" TopLeft="0 133" />
+                            <CaseStructure.Tunnel Id="b20" Terminals="n0=w25, d0=w27, d1=w20" TopLeft="560 210" />
+                            <CaseStructure.Tunnel Id="b22" Terminals="n0=w27, d0=w28, d1=w22" TopLeft="560 224" />
+                            <CaseStructure.Tunnel Id="b24" Terminals="n0=w29, d0=w29, d1=w24" TopLeft="560 238" />
+                            <CaseStructure.Tunnel Id="b27" Terminals="n0=w21, d0=w25, d1=w27" TopLeft="560 182" />
+                            <CaseStructure.Tunnel Id="b36" Terminals="n0=w23, d0=w26, d1=w30" TopLeft="560 196" />
+                        </CaseStructure>
+                        <Comment Bounds="112 105 100 35" SizeMode="User" AttachStyle="Free">
+                            <Content>IF R &gt; G</Content>
+                        </Comment>
+                        <Wire Id="w21" Joints="N(b27:n0) N(b23:D22)" />
+                        <Wire Id="w23" Joints="N(b36:n0) N(b25:D22)" />
+                        <Wire Id="w25" Joints="N(b20:n0) N(b26:D22)" />
+                        <Wire Id="w27" Joints="N(b22:n0) N(b29:D22)" />
+                        <Wire Id="w29" Joints="N(b24:n0) N(b30:D22)" />
+                    </FlatSequence.Frame>
+                    <FlatSequence.Frame Id="D23" Bounds="896 7 1610 546">
+                        <CaseStructure Id="n20" Bounds="112 238 456 238" DataType="Boolean" UserSelectorBounds="183.267 0 89.467 14" Selected="D22" Default="D22">
+                            <CaseStructure.Case Id="D22" Bounds="7 7 442 224" Pattern="False">
+                                <Wire Id="w11" Joints="N(b31:D22) h(71) v(101) h(145) N(n4:X)" />
+                                <Wire Id="w12" Joints="N(b38:D22) h(49) v(98) h(198) N(n4:Y)" />
+                                <Subtract Id="n13" Terminals="x\-y=w16, y=w15, x=w14" TopLeft="231 147" />
+                                <Wire Id="w14" Joints="N(b34:D22) h(35) v(105) N(n13:x)" />
+                                <Wire Id="w15" Joints="N(b35:D22) h(21) v(105) N(n13:y)" />
+                                <ConfigurableMethodCall Id="n4" Bounds="154 21 225 91" Target="X3Placeholder_2A058539\-ED76\-4476\-93FE\-CCE8AA559C5A_MathEquation\.vix">
+                                    <ConfigurableMethodTerminal ConfiguredValue="1">
+                                        <Terminal Id="X" Direction="Input" Wire="w11" DataType="Single" Hotspot="0.5 1" Bounds="54 56 30 27" />
+                                    </ConfigurableMethodTerminal>
+                                    <ConfigurableMethodTerminal ConfiguredValue="1">
+                                        <Terminal Id="Y" Direction="Input" Wire="w12" DataType="Single" Hotspot="0.5 1" Bounds="85 56 30 27" />
+                                    </ConfigurableMethodTerminal>
+                                    <ConfigurableMethodTerminal ConfiguredValue="0">
+                                        <Terminal Id="C" Direction="Input" Wire="w16" DataType="Single" Hotspot="0.5 1" Bounds="116 56 30 27" />
+                                    </ConfigurableMethodTerminal>
+                                    <ConfigurableMethodTerminal ConfiguredValue="0">
+                                        <Terminal Id="D" Direction="Input" Wire="w17" DataType="Single" Hotspot="0.5 1" Bounds="147 56 30 27" />
+                                    </ConfigurableMethodTerminal>
+                                    <ConfigurableMethodTerminal ConfiguredValue="(60*((a-b)/c))+d">
+                                        <Terminal Id="Equation" Direction="Input" DataType="String" Hotspot="0.5 1" Bounds="0 0 0 0" />
+                                    </ConfigurableMethodTerminal>
+                                    <ConfigurableMethodTerminal>
+                                        <Terminal Id="Result" Direction="Output" Wire="w19" DataType="Single" Hotspot="0.5 1" Bounds="178 56 30 27" />
+                                    </ConfigurableMethodTerminal>
+                                    <Terminal Id="SequenceIn" Direction="Input" DataType="NationalInstruments:SourceModel:DataTypes:X3SequenceWireDataType" Hotspot="0 0.5" Bounds="0 33 18 18" />
+                                    <Terminal Id="SequenceOut" Direction="Output" DataType="NationalInstruments:SourceModel:DataTypes:X3SequenceWireDataType" Hotspot="1 0.5" Bounds="207 33 18 18" />
+                                </ConfigurableMethodCall>
+                                <Wire Id="w16" Joints="N(n13:x\-y) h(26) N(n4:C)" />
+                                <Wire Id="w17" Joints="N(b33:D22) h(7) v(105) h(302) N(n4:D)" />
+                                <RoundToNearest Id="n15" Terminals="nearest\ integer\ value=w18, number=w19" TopLeft="357 161" />
+                                <Wire Id="w18" Joints="N(n15:nearest\ integer\ value) N(b28:D22)" />
+                                <Wire Id="w19" Joints="N(n4:Result) v(64) N(n15:number)" />
+                            </CaseStructure.Case>
+                            <CaseStructure.Case Id="D23" Bounds="7 7 442 224" Pattern="True">
+                                <Literal Id="n16" Terminals="Out=w4" Bounds="392 161 28 14" Interpretation="Exact" DataType="Single">0</Literal>
+                                <Wire Id="w4" Joints="N(n16:Out) N(b28:D23)" />
+                            </CaseStructure.Case>
+                            <CaseStructure.Selector Id="b21" Terminals="n20=w37, D22, D23" TopLeft="0 119" />
+                            <CaseStructure.Tunnel Id="b28" Terminals="n20=w39, D22=w18, D23=w4" TopLeft="442 168" />
+                            <CaseStructure.Tunnel Id="b31" Terminals="n20=w31, D22=w11, D23" TopLeft="0 21" />
+                            <CaseStructure.Tunnel Id="b33" Terminals="n20=w35, D22=w17, D23" TopLeft="0 77" />
+                            <CaseStructure.Tunnel Id="b34" Terminals="n20=w66, D22=w14, D23" TopLeft="0 49" />
+                            <CaseStructure.Tunnel Id="b35" Terminals="n20=w65, D22=w15, D23" TopLeft="0 63" />
+                            <CaseStructure.Tunnel Id="b38" Terminals="n20=w32, D22=w12, D23" TopLeft="0 35" />
+                        </CaseStructure>
+                        <Wire Id="w31" Joints="N(b23:D23) N(b31:n20)" />
+                        <Wire Id="w32" Joints="N(b25:D23) N(b38:n20)" />
+                        <Wire Id="w35" Joints="N(b30:D23) N(b33:n20)" />
+                        <Wire Id="w37" Joints="N(n29:x\ \=\ y\?) N(b21:n20)" />
+                        <Wire Id="w39" Joints="N(b28:n20) N(n30:Value)" />
+                        <Wire Id="w65" Joints="N(b29:D23) h(52.5) v(63) N(n29:y) B(1) h(33.021) N(b35:n20) B(4) v(-175) h(496.315) N(b62:n52) B(7) v(350) h(613.664) N(n45:Y)" />
+                        <Wire Id="w66" Joints="N(b26:D23) h(31.9) v(63) N(n29:x) B(1) h(37.781) N(b34:n20) B(4) v(-175) h(451.819) N(b46:n52) B(7) v(28) N(n48:x)" />
+                        <IsEqual Id="n29" Terminals="x\ \=\ y\?=w37, y=w65, x=w66" TopLeft="63 350" />
+                        <DataAccessor DataItem="H" Id="n30" Bounds="595 406 70 14">
+                            <Terminal Id="Value" Direction="Input" Wire="w39" Hotspot="0 0.5" Bounds="0 0 70 14" />
+                        </DataAccessor>
+                        <IsEqualTo0 Id="n48" Terminals="x\ \=\ 0\?=w36, x=w66" TopLeft="532 140" />
+                        <DataAccessor DataItem="S" Id="n50" Bounds="1022 217 70 14">
+                            <Terminal Id="Value" Direction="Input" Wire="w38" Hotspot="0 0.5" Bounds="0 0 70 14" />
+                        </DataAccessor>
+                        <CaseStructure Id="n52" Bounds="602 91 399 210" DataType="Boolean" UserSelectorBounds="154.767 0 89.467 14" Selected="D54" Default="D54">
+                            <CaseStructure.Case Id="D54" Bounds="7 7 385 196" Pattern="False">
+                                <RoundToNearest Id="n16" Terminals="nearest\ integer\ value=w18, number=w12" TopLeft="315 119" />
+                                <Wire Id="w18" Joints="N(n16:nearest\ integer\ value) N(b47:D54)" />
+                                <Wire Id="w11" Joints="N(b46:D54) h(17.106) v(147) h(135.894) h(62) N(n4:C) B(3) N(n4:X) B(1) N(b49:D54)" />
+                                <ConfigurableMethodCall Id="n4" Bounds="91 28 225 91" Target="X3Placeholder_2A058539\-ED76\-4476\-93FE\-CCE8AA559C5A_MathEquation\.vix">
+                                    <ConfigurableMethodTerminal ConfiguredValue="1">
+                                        <Terminal Id="X" Direction="Input" Wire="w11" DataType="Single" Hotspot="0.5 1" Bounds="54 56 30 27" />
+                                    </ConfigurableMethodTerminal>
+                                    <ConfigurableMethodTerminal ConfiguredValue="1">
+                                        <Terminal Id="Y" Direction="Input" Wire="w10" DataType="Single" Hotspot="0.5 1" Bounds="85 56 30 27" />
+                                    </ConfigurableMethodTerminal>
+                                    <ConfigurableMethodTerminal ConfiguredValue="0">
+                                        <Terminal Id="C" Direction="Input" Wire="w11" DataType="Single" Hotspot="0.5 1" Bounds="116 56 30 27" />
+                                    </ConfigurableMethodTerminal>
+                                    <ConfigurableMethodTerminal ConfiguredValue="0">
+                                        <Terminal Id="D" Direction="Input" DataType="Single" Hotspot="0.5 1" Bounds="147 56 30 27" />
+                                    </ConfigurableMethodTerminal>
+                                    <ConfigurableMethodTerminal ConfiguredValue="((a-b)/c)*100">
+                                        <Terminal Id="Equation" Direction="Input" DataType="String" Hotspot="0.5 1" Bounds="0 0 0 0" />
+                                    </ConfigurableMethodTerminal>
+                                    <ConfigurableMethodTerminal>
+                                        <Terminal Id="Result" Direction="Output" Wire="w12" DataType="Single" Hotspot="0.5 1" Bounds="178 56 30 27" />
+                                    </ConfigurableMethodTerminal>
+                                    <Terminal Id="SequenceIn" Direction="Input" DataType="NationalInstruments:SourceModel:DataTypes:X3SequenceWireDataType" Hotspot="0 0.5" Bounds="0 33 18 18" />
+                                    <Terminal Id="SequenceOut" Direction="Output" DataType="NationalInstruments:SourceModel:DataTypes:X3SequenceWireDataType" Hotspot="1 0.5" Bounds="207 33 18 18" />
+                                </ConfigurableMethodCall>
+                                <Wire Id="w10" Joints="N(b62:D54) h(35) v(112) h(149) N(n4:Y)" />
+                                <Wire Id="w12" Joints="N(n4:Result) v(15) N(n16:number)" />
+                            </CaseStructure.Case>
+                            <CaseStructure.Case Id="D55" Bounds="7 7 385 196" Pattern="True">
+                                <Literal Id="n32" Terminals="Out=w6" Bounds="308 119 28 14" Interpretation="Exact" DataType="Single">0</Literal>
+                                <Wire Id="w6" Joints="N(n32:Out) N(b47:D55)" />
+                                <Wire Id="w7" Joints="N(b46:D55) N(b49:D55)" />
+                            </CaseStructure.Case>
+                            <CaseStructure.Selector Id="b52" Terminals="n52=w36, D54, D55" TopLeft="0 49" />
+                            <CaseStructure.Tunnel Id="b46" Terminals="n52=w66, D54=w11, D55=w7" TopLeft="0 21" />
+                            <CaseStructure.Tunnel Id="b47" Terminals="n52=w38, D54=w18, D55=w6" TopLeft="385 126" />
+                            <CaseStructure.Tunnel Id="b49" Terminals="n52=w41, D54=w11, D55=w7" TopLeft="385 21" />
+                            <CaseStructure.Tunnel Id="b62" Terminals="n52=w65, D54=w10, D55" TopLeft="0 35" />
+                        </CaseStructure>
+                        <Wire Id="w36" Joints="N(n48:x\ \=\ 0\?) N(b52:n52)" />
+                        <Wire Id="w38" Joints="N(b47:n52) N(n50:Value)" />
+                        <Wire Id="w63" Joints="N(n58:nearest\ integer\ value) N(n62:Value)" />
+                        <RoundToNearest Id="n58" Terminals="nearest\ integer\ value=w63, number=w44" TopLeft="1316 266" />
+                        <DataAccessor DataItem="V" Id="n62" Bounds="1358 266 70 14">
+                            <Terminal Id="Value" Direction="Input" Wire="w63" Hotspot="0 0.5" Bounds="0 0 70 14" />
+                        </DataAccessor>
+                        <Comment Bounds="224 154 182 35" SizeMode="User" AttachStyle="Free">
+                            <Content>60 * ((a-b) / diff) + c  = HUE</Content>
+                        </Comment>
+                        <Comment Bounds="721 42 182 35" SizeMode="User" AttachStyle="Free">
+                            <Content>(diff / cmax) * 100 = S</Content>
+                        </Comment>
+                        <ConfigurableMethodCall Id="n4" Bounds="1099 126 225 91" Target="X3Placeholder_2A058539\-ED76\-4476\-93FE\-CCE8AA559C5A_MathEquation\.vix">
+                            <ConfigurableMethodTerminal ConfiguredValue="1">
+                                <Terminal Id="X" Direction="Input" Wire="w41" DataType="Single" Hotspot="0.5 1" Bounds="54 56 30 27" />
+                            </ConfigurableMethodTerminal>
+                            <ConfigurableMethodTerminal ConfiguredValue="1">
+                                <Terminal Id="Y" Direction="Input" Wire="w45" DataType="Single" Hotspot="0.5 1" Bounds="85 56 30 27" />
+                            </ConfigurableMethodTerminal>
+                            <ConfigurableMethodTerminal ConfiguredValue="0">
+                                <Terminal Id="C" Direction="Input" DataType="Single" Hotspot="0.5 1" Bounds="116 56 30 27" />
+                            </ConfigurableMethodTerminal>
+                            <ConfigurableMethodTerminal ConfiguredValue="0">
+                                <Terminal Id="D" Direction="Input" DataType="Single" Hotspot="0.5 1" Bounds="147 56 30 27" />
+                            </ConfigurableMethodTerminal>
+                            <ConfigurableMethodTerminal ConfiguredValue="(a/b)*100">
+                                <Terminal Id="Equation" Direction="Input" DataType="String" Hotspot="0.5 1" Bounds="0 0 0 0" />
+                            </ConfigurableMethodTerminal>
+                            <ConfigurableMethodTerminal>
+                                <Terminal Id="Result" Direction="Output" Wire="w44" DataType="Single" Hotspot="0.5 1" Bounds="178 56 30 27" />
+                            </ConfigurableMethodTerminal>
+                            <Terminal Id="SequenceIn" Direction="Input" Wire="w54" DataType="NationalInstruments:SourceModel:DataTypes:X3SequenceWireDataType" Hotspot="0 0.5" Bounds="0 33 18 18" />
+                            <Terminal Id="SequenceOut" Direction="Output" Wire="w52" DataType="NationalInstruments:SourceModel:DataTypes:X3SequenceWireDataType" Hotspot="1 0.5" Bounds="207 33 18 18" />
+                        </ConfigurableMethodCall>
+                        <Wire Id="w41" Joints="N(b49:n52) h(84) v(119) h(0.171) h(82.829) N(n4:X) B(3) v(182) h(82.829) N(n45:X)" />
+                        <DataAccessor DataItem="Num2divid" Id="n42" Bounds="840 427 91 14">
+                            <Terminal Id="Value" Direction="Output" Wire="w45" Hotspot="1 0.5" Bounds="0 0 91 14" />
+                        </DataAccessor>
+                        <Wire Id="w44" Joints="N(n4:Result) v(64) N(n58:number)" />
+                        <ConfigurableMethodCall Id="n45" Bounds="1099 322 225 91" Target="X3Placeholder_2A058539\-ED76\-4476\-93FE\-CCE8AA559C5A_MathEquation\.vix">
+                            <ConfigurableMethodTerminal ConfiguredValue="1">
+                                <Terminal Id="X" Direction="Input" Wire="w41" DataType="Single" Hotspot="0.5 1" Bounds="54 56 30 27" />
+                            </ConfigurableMethodTerminal>
+                            <ConfigurableMethodTerminal ConfiguredValue="1">
+                                <Terminal Id="Y" Direction="Input" Wire="w65" DataType="Single" Hotspot="0.5 1" Bounds="85 56 30 27" />
+                            </ConfigurableMethodTerminal>
+                            <ConfigurableMethodTerminal ConfiguredValue="0">
+                                <Terminal Id="C" Direction="Input" Wire="w45" DataType="Single" Hotspot="0.5 1" Bounds="116 56 30 27" />
+                            </ConfigurableMethodTerminal>
+                            <ConfigurableMethodTerminal ConfiguredValue="0">
+                                <Terminal Id="D" Direction="Input" DataType="Single" Hotspot="0.5 1" Bounds="147 56 30 27" />
+                            </ConfigurableMethodTerminal>
+                            <ConfigurableMethodTerminal ConfiguredValue="(((a+b)/2)/c)*100">
+                                <Terminal Id="Equation" Direction="Input" DataType="String" Hotspot="0.5 1" Bounds="0 0 0 0" />
+                            </ConfigurableMethodTerminal>
+                            <ConfigurableMethodTerminal>
+                                <Terminal Id="Result" Direction="Output" Wire="w49" DataType="Single" Hotspot="0.5 1" Bounds="178 56 30 27" />
+                            </ConfigurableMethodTerminal>
+                            <Terminal Id="SequenceIn" Direction="Input" Wire="w52" DataType="NationalInstruments:SourceModel:DataTypes:X3SequenceWireDataType" Hotspot="0 0.5" Bounds="0 33 18 18" />
+                            <Terminal Id="SequenceOut" Direction="Output" Wire="w53" DataType="NationalInstruments:SourceModel:DataTypes:X3SequenceWireDataType" Hotspot="1 0.5" Bounds="207 33 18 18" />
+                        </ConfigurableMethodCall>
+                        <Wire Id="w45" Joints="N(n42:Value) h(133) v(-154) h(135) N(n4:Y) B(1) h(166) N(n45:C)" />
+                        <DataAccessor DataItem="L" Id="n46" Bounds="1358 420 70 14">
+                            <Terminal Id="Value" Direction="Input" Wire="w48" Hotspot="0 0.5" Bounds="0 0 70 14" />
+                        </DataAccessor>
+                        <RoundToNearest Id="n47" Terminals="nearest\ integer\ value=w48, number=w49" TopLeft="1323 420" />
+                        <Wire Id="w48" Joints="N(n47:nearest\ integer\ value) N(n46:Value)" />
+                        <Wire Id="w49" Joints="N(n45:Result) v(22) N(n47:number)" />
+                        <Comment Bounds="1113 91 182 35" SizeMode="User" AttachStyle="Free">
+                            <Content>(cmax / 1024) * 100 = V (%)</Content>
+                        </Comment>
+                        <Comment Bounds="1085 497 245 35" SizeMode="User" AttachStyle="Free">
+                            <Content>(((max+min)/2) / 1024) * 100 = L (%)</Content>
+                        </Comment>
+                        <DataAccessor DataItem="SequenceOut" Id="n68" Bounds="1358 357 105 14">
+                            <Terminal Id="Value" Direction="Input" Wire="w53" Hotspot="0 0.5" Bounds="0 0 105 14" />
+                        </DataAccessor>
+                        <DataAccessor DataItem="SequenceIn" Id="n67" Bounds="945 56 98 14">
+                            <Terminal Id="Value" Direction="Output" Wire="w54" Hotspot="1 0.5" Bounds="0 0 98 14" />
+                        </DataAccessor>
+                        <Wire Id="w52" Joints="N(n4:SequenceOut) h(7) v(91) h(-239) v(105) N(n45:SequenceIn)" />
+                        <Wire Id="w53" Joints="N(n45:SequenceOut) N(n68:Value)" />
+                        <Wire Id="w54" Joints="N(n67:Value) h(7) v(105) N(n4:SequenceIn)" />
+                    </FlatSequence.Frame>
+                    <FlatSequence.Tunnel Id="b23" Terminals="D22=w21, D23=w31" TopLeft="885.5 266" />
+                    <FlatSequence.Tunnel Id="b25" Terminals="D22=w23, D23=w32" TopLeft="885.5 280" />
+                    <FlatSequence.Tunnel Id="b26" Terminals="D22=w25, D23=w66" TopLeft="885.5 294" />
+                    <FlatSequence.Tunnel Id="b29" Terminals="D22=w27, D23=w65" TopLeft="885.5 308" />
+                    <FlatSequence.Tunnel Id="b30" Terminals="D22=w29, D23=w35" TopLeft="885.5 322" />
+                </FlatSequence>
+            </BlockDiagram>
+            <Icon>
+                <Model:IconPanel xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Model="clr-namespace:NationalInstruments.LabVIEW.VI.Design;assembly=NationalInstruments.LabVIEW.VI.SourceModel" xmlns:fpruntime="clr-namespace:NationalInstruments.LabVIEW.FrontPanelRuntime;assembly=NationalInstruments.LabVIEW.FrontPanelRuntime" xmlns:ation="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Height="70" Width="56">
+                    <fpruntime:AnimationProperties.Animations>
+                        <fpruntime:AnimationsContainer />
+                    </fpruntime:AnimationProperties.Animations>
+                    <fpruntime:EventProperties.Events>
+                        <fpruntime:EventContainer />
+                    </fpruntime:EventProperties.Events>
+                    <Model:IconPanel.Background>
+                        <ation:LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5, 1">
+                            <ation:LinearGradientBrush.Transform>
+                                <ation:MatrixTransform />
+                            </ation:LinearGradientBrush.Transform>
+                            <ation:LinearGradientBrush.RelativeTransform>
+                                <ation:MatrixTransform />
+                            </ation:LinearGradientBrush.RelativeTransform>
+                            <ation:GradientStop Color="#FFF6F5C6" />
+                            <ation:GradientStop Color="#FFFFFFFE" Offset="0.25" />
+                            <ation:GradientStop Color="#FFF6F5C6" Offset="1" />
+                        </ation:LinearGradientBrush>
+                    </Model:IconPanel.Background>
+                    <ation:Rectangle x:Name="Template" Width="NaN" Height="NaN" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 13, 0, 0" ation:Grid.Row="0" ation:Grid.Column="0" ation:Grid.RowSpan="1" ation:Grid.ColumnSpan="1" Fill="#00FFFFFF" Stroke="#FF000000" StrokeThickness="1" RadiusX="0" RadiusY="0">
+                        <fpruntime:AnimationProperties.Animations>
+                            <fpruntime:AnimationsContainer />
+                        </fpruntime:AnimationProperties.Animations>
+                        <fpruntime:EventProperties.Events>
+                            <fpruntime:EventContainer />
+                        </fpruntime:EventProperties.Events>
+                    </ation:Rectangle>
+                    <ation:Rectangle x:Name="Template2" Width="NaN" Height="14" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0" ation:Grid.Row="0" ation:Grid.Column="0" ation:Grid.RowSpan="1" ation:Grid.ColumnSpan="1" Stroke="#FF000000" StrokeThickness="1" RadiusX="0" RadiusY="0">
+                        <fpruntime:AnimationProperties.Animations>
+                            <fpruntime:AnimationsContainer />
+                        </fpruntime:AnimationProperties.Animations>
+                        <fpruntime:EventProperties.Events>
+                            <fpruntime:EventContainer />
+                        </fpruntime:EventProperties.Events>
+                        <ation:Rectangle.Fill>
+                            <ation:LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5, 1">
+                                <ation:LinearGradientBrush.Transform>
+                                    <ation:MatrixTransform />
+                                </ation:LinearGradientBrush.Transform>
+                                <ation:LinearGradientBrush.RelativeTransform>
+                                    <ation:MatrixTransform />
+                                </ation:LinearGradientBrush.RelativeTransform>
+                                <ation:GradientStop Color="#FFFFFFFF" />
+                                <ation:GradientStop Color="#FFD5EAEA" Offset="1" />
+                            </ation:LinearGradientBrush>
+                        </ation:Rectangle.Fill>
+                    </ation:Rectangle>
+                    <ation:TextBlock x:Name="Template3" Width="NaN" Height="NaN" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0, -0.100000001490116, 0, 0" ation:Grid.Row="0" ation:Grid.Column="0" ation:Grid.RowSpan="1" ation:Grid.ColumnSpan="1" Text="SubVI" FontFamily="Portable User Interface" FontSize="10" FontWeight="Normal" Foreground="#FF000000">
+                        <fpruntime:AnimationProperties.Animations>
+                            <fpruntime:AnimationsContainer />
+                        </fpruntime:AnimationProperties.Animations>
+                        <fpruntime:EventProperties.Events>
+                            <fpruntime:EventContainer />
+                        </fpruntime:EventProperties.Events>
+                        <fpruntime:BuddyReferenceProperties.BuddyProperties>
+                            <fpruntime:BuddyProperties />
+                        </fpruntime:BuddyReferenceProperties.BuddyProperties>
+                    </ation:TextBlock>
+                    <ation:TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1.87166500091553, 26.1349806785584, 0, 0" TextAlignment="Center" FontSize="10">
+                        <fpruntime:AnimationProperties.Animations>
+                            <fpruntime:AnimationsContainer />
+                        </fpruntime:AnimationProperties.Animations>
+                        <fpruntime:EventProperties.Events>
+                            <fpruntime:EventContainer />
+                        </fpruntime:EventProperties.Events>
+                        <ation:TextBlock.Text>
+                            <String xml:space="preserve" xmlns="clr-namespace:System;assembly=mscorlib">OFDL
+RGB2HSV</String>
+                        </ation:TextBlock.Text>
+                        <fpruntime:BuddyReferenceProperties.BuddyProperties>
+                            <fpruntime:BuddyProperties />
+                        </fpruntime:BuddyReferenceProperties.BuddyProperties>
+                    </ation:TextBlock>
+                </Model:IconPanel>
+            </Icon>
+        </VirtualInstrument>
+    </Namespace>
+</SourceFile>

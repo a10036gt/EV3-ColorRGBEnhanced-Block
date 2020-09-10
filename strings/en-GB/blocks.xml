@@ -14,6 +14,9 @@
       <Parameter Name="Blue" DisplayName="Blue">
         <Description><![CDATA[<p>Blue component of RGB color</p>]]></Description>
       </Parameter>
+	   <Parameter Name="White" DisplayName="White">
+        <Description><![CDATA[<p>Context help for Parameter <b>White</b></p>]]></Description>
+      </Parameter>
 	  <Parameter Name="Red_Range" DisplayName="Red Reference Value">
         <Description><![CDATA[<p>Red component of RGB color</p>]]></Description>
       </Parameter>
@@ -32,10 +35,22 @@
 	  <Parameter Name="RawValue" DisplayName="Raw Value">
         <Description><![CDATA[<p>Blue component of RGB color</p>]]></Description>
       </Parameter>
+	  <Parameter Name="Hue" DisplayName="Hue">
+        <Description><![CDATA[<p>Context help for Parameter <b>Hue</b></p>]]></Description>
+      </Parameter>
+	  <Parameter Name="Lightness" DisplayName="Lightness(%)">
+        <Description><![CDATA[<p>Context help for Parameter <b>Lightness</b></p>]]></Description>
+      </Parameter>
+	  <Parameter Name="Saturation" DisplayName="Saturation(%)">
+        <Description><![CDATA[<p>Context help for Parameter <b>Saturation</b></p>]]></Description>
+      </Parameter>
+	  <Parameter Name="Value" DisplayName="Value(%)">
+        <Description><![CDATA[<p>Context help for Parameter <b>Value</b></p>]]></Description>
+      </Parameter>
       <Block Mode="ReadRGB" DisplayName="Measure - RGB color">
         <Description><![CDATA[<p>Measure RGB colors</p>]]></Description>
       </Block>
-	  <Block Mode="ReadRaw" DisplayName="Reflected Light Intensity (Raw)(T2H)">
+	  <Block Mode="ReadHSV" DisplayName="Measure - HSVL color">
         <Description><![CDATA[<p>Measure RGB colors</p>]]></Description>
       </Block>
 	  <Block Mode="DectRGB" DisplayName="Compare - RGB color">
