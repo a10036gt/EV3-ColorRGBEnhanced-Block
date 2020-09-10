@@ -1,8 +1,7 @@
 # EV3-ColorRGBEnhanced-Block
 ![](https://ofdl.tw/wp-content/uploads/2019/04/EV3_RGBAdv_OFDL.jpg)
 
-You can download ev3b file to import this block：[ColorRGBEnhanced_OFDL_V1.5.ev3b
-](https://github.com/a10036gt/EV3-ColorRGBEnhanced-Block/releases/download/1.5/ColorRGBEnhanced_OFDL_V1.5.ev3b)
+You can download ev3b file to import this block：[Latest Release](https://github.com/a10036gt/EV3-ColorRGBEnhanced-Block/releases/)
 
 The original EV3 color sensor supports reflected light, ambient light and color mode, but this does not meet our needs. David Gilday, who made mindcuber, created the EV3 Color RGB mode in the early days, which greatly improved the EV3 Color Sensor. But the Color Sensor RGB file is not perfect, so we have added other functions, including the RGB comparison mode and the raw value mode.
 
